@@ -1,9 +1,9 @@
 <VirtualHost *:80>
 	ServerName {{ vhost_domain }}
 
-	<Directory {{ htdocs }}>
+	<Directory {{ vhost_directory }}/htdocs>
 		Require all granted
-		Options -Index
+		Options -Indexes
 		AllowOverride all
 	</Directory>
 
@@ -15,9 +15,9 @@
 <VirtualHost *:443>
 	ServerName {{ vhost_domain }}
 
-	<Directory {{ htdocs }}>
+	<Directory {{ vhost_directory }}/htdocs>
 		Require all granted
-		Options -Index
+		Options -Indexes
 		AllowOverride all
 	</Directory>
 

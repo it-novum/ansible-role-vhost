@@ -13,8 +13,8 @@
 - name: Ensure apache sites-available/sites-enabled exists
   file: path={{ item }} owner=root group=root mode=0755
   with_items:
-    - {{ apache_sites_enabled }}
-    - {{ apache_sites_available }}
+    - "{{ apache_sites_enabled }}"
+    - "{{ apache_sites_available }}"
 
 - name: Create vhost directory
   file: path={{ vhost_directory }} owner=root group=root mode=0755 state=directory
@@ -23,13 +23,13 @@
   user: name={{ vhost_user }} createhome=no home={{ vhost_directory }} shell=/bin/false
 
 - name: Create htdocs
-  file: path={{ vhost_directory }}/htdocs owner={{ vhost_user }} group=www-data mode=0750
+  file: path={{ vhost_directory }}/htdocs owner={{ vhost_user }} group=www-data mode=0750 state=directory
 
 - name: Create log directory
-  file: path={{ vhost_directory }}/logs owner=root group={{ vhost_user }} mode=0750
+  file: path={{ vhost_directory }}/logs owner=root group={{ vhost_user }} mode=0750 state=directory
 
 - name: Create tmp directory
-  file: path={{ vhost_directory }}/tmp owner={{ vhost_user }} group={{ vhost_user }} mode=0700
+  file: path={{ vhost_directory }}/tmp owner={{ vhost_user }} group={{ vhost_user }} mode=0700 state=directory
 
 - name: Apache configuration
   template: src=vhost.conf.j2 dest={{ apache_sites_available }}/{{ vhost_domain }}.conf owner=root group=root mode=0644
