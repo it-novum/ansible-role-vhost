@@ -1,0 +1,15 @@
+        ServerName {{ vhost_domain }}
+
+	DocumentRoot {{ vhost_directory }}/htdocs
+        <Directory {{ vhost_directory }}/htdocs>
+                Require all granted
+                Options -Indexes
+                AllowOverride all
+        </Directory>
+
+        LogLevel warn
+        ErrorLog {{ vhost_directory }}/logs/error.log
+        CustomLog {{ vhost_directory }}/logs/access.log combined
+
+{% if use_php %}{% include "php_conf_include.j2" %}{% endif %}
+
