@@ -31,6 +31,13 @@
 - name: Create tmp directory
   file: path={{ vhost_directory }}/tmp owner={{ vhost_user }} group={{ vhost_user }} mode=0700 state=directory
 
+# Workaround: include_role has problems with when in 2.2
+- block:
+  - name: PHP
+    include_role: name=php private=yes
+    static: no
+  when: use_php
+
 - name: Apache configuration
   template: src=vhost.conf.j2 dest={{ apache_sites_available }}/{{ vhost_domain }}.conf owner=root group=root mode=0644
 
