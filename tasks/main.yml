@@ -22,8 +22,11 @@
 - name: Create vhost user
   user: name={{ vhost_user }} createhome=no home={{ vhost_directory }} shell=/bin/false
 
+- name: Add www-data to users group
+  user: name=www-data append=yes groups={{ vhost_user }}
+
 - name: Create htdocs
-  file: path={{ vhost_directory }}/htdocs owner={{ vhost_user }} group=www-data mode=0750 state=directory
+  file: path={{ vhost_directory }}/htdocs owner={{ vhost_user }} group={{ vhost_user }} mode=0750 state=directory
 
 - name: Create log directory
   file: path={{ vhost_directory }}/logs owner=root group={{ vhost_user }} mode=0750 state=directory
@@ -34,7 +37,7 @@
 # Workaround: include_role has problems with when in 2.2
 - block:
   - name: PHP
-    include_role: name=php private=yes
+    include_role: name=php
     static: no
   when: use_php
 
