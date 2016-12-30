@@ -1,5 +1,9 @@
 <VirtualHost *:80>
+{% if vhost_ssl_only %}
+{% include "redirect_https_conf_include.j2" %}
+{% else %}
 {% include "basic_conf_include.j2" %}
+{% endif %}
 
 </VirtualHost>
 

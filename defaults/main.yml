@@ -1,1 +1,2 @@
 use_php: false
+vhost_ssl_only: false
