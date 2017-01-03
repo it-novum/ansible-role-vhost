@@ -10,6 +10,12 @@
 - name: Fact | apache sites-enabled
   set_fact: apache_sites_enabled={{ apache_etc }}/sites-enabled
 
+- name: Fact | apache sites-include
+  set_fact: apache_sites_include={{ apache_etc }}/sites-include
+
+- name: Create site-include directory
+  file: path={{ apache_sites_include }} owner=root group=root mode=0755
+
 - name: Ensure apache sites-available/sites-enabled exists
   file: path={{ item }} owner=root group=root mode=0755
   with_items:
@@ -40,6 +46,10 @@
     include_role: name=php
     static: no
   when: use_php
+
+- name: Apache install mod_perl
+  apt: name=libapache2-mod-perl2  
+  when: use_perl
 
 - name: Apache configuration
   template: src=vhost.conf.j2 dest={{ apache_sites_available }}/{{ vhost_domain }}.conf owner=root group=root mode=0644

@@ -1,2 +1,3 @@
 use_php: false
+use_perl: false
 vhost_ssl_only: false

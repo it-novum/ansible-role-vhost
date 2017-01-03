@@ -11,5 +11,7 @@
         ErrorLog {{ vhost_directory }}/logs/error.log
         CustomLog {{ vhost_directory }}/logs/access.log combined
 
+    IncludeOptional /etc/apache2/sites-include/{{ vhost_domain }}*.conf
+
 {% if use_php %}{% include "php_conf_include.j2" %}{% endif %}
 
