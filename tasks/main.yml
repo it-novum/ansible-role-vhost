@@ -26,7 +26,7 @@
   file: path={{ vhost_directory }} owner=root group=root mode=0755 state=directory
 
 - name: Create vhost user
-  user: name={{ vhost_user }} createhome=no home={{ vhost_directory }} shell=/bin/false
+  user: name={{ vhost_user }} createhome=no home={{ vhost_directory }} shell={{vhost_user_shell}}
 
 - name: Add www-data to users group
   user: name=www-data append=yes groups={{ vhost_user }}
@@ -48,7 +48,7 @@
   when: use_php
 
 - name: Apache install mod_perl
-  apt: name=libapache2-mod-perl2  
+  apt: name=libapache2-mod-perl2
   when: use_perl
 
 - name: Apache configuration
@@ -56,4 +56,3 @@
 
 - name: Enable Apache configuration
   file: state=link src={{ apache_sites_available }}/{{ vhost_domain }}.conf path={{ apache_sites_enabled }}/{{ vhost_domain }}.conf
-
