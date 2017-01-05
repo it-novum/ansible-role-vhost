@@ -31,6 +31,42 @@
 - name: Add www-data to users group
   user: name=www-data append=yes groups={{ vhost_user }}
 
+- name: Check if bash_history exists
+  stat: path={{ vhost_directory }}/.bash_history
+  register: stat_bash_history
+
+- name: Create bash history file
+  file: path={{ vhost_directory }}/.bash_history state="touch"
+  when: vhost_user_bash_files and not stat_bash_history.stat.exists
+
+- name: Set bash history permissions
+  file: path={{ vhost_directory }}/.bash_history owner={{ vhost_user }} group={{ vhost_user }} mode=0640
+  when: stat_bash_history.stat.exists
+
+- name: Check if bashrc exists
+  stat: path={{ vhost_directory }}/.bashrc
+  register: stat_bashrc
+
+- name: Create bashrc file
+  file: path={{ vhost_directory }}/.bashrc state="touch"
+  when: vhost_user_bash_files and not stat_bashrc.stat.exists
+
+- name: Set bashrc permissions
+  file: path={{ vhost_directory }}/.bashrc owner={{ vhost_user }} group={{ vhost_user }} mode=0640
+  when: stat_bashrc.stat.exists
+
+- name: Check if .viminfo exists
+  stat: path={{ vhost_directory }}/.viminfo
+  register: stat_viminfo
+
+- name: Create .viminfo
+  file: path={{ vhost_directory }}/.viminfo state="touch"
+  when: vhost_user_bash_files and not stat_viminfo.stat.exists
+
+- name: Set .viminfo permissions
+  file: path={{ vhost_directory }}/.viminfo owner={{ vhost_user }} group={{ vhost_user }} mode=0640
+  when: stat_viminfo.stat.exists
+
 - name: Create htdocs
   file: path={{ vhost_directory }}/htdocs owner={{ vhost_user }} group={{ vhost_user }} mode=0750 state=directory
 

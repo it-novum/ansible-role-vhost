@@ -2,3 +2,4 @@ use_php: false
 use_perl: false
 vhost_ssl_only: false
 vhost_user_shell: "/bin/false"
+vhost_user_bash_files: false
