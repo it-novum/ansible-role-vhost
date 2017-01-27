@@ -13,6 +13,10 @@
 - name: Fact | apache sites-include
   set_fact: apache_sites_include={{ apache_etc }}/sites-include
 
+- name: Fact | vhost_user_home
+  set_fact: vhost_user_home={{ vhost_directory }}
+  when: not vhost_user_home is defined
+
 - name: Create site-include directory
   file: path={{ apache_sites_include }} owner=root group=root mode=0755 state=directory
 
@@ -26,7 +30,7 @@
   file: path={{ vhost_directory }} owner=root group=root mode=0755 state=directory
 
 - name: Create vhost user
-  user: name={{ vhost_user }} createhome=no home={{ vhost_directory }} shell={{vhost_user_shell}}
+  user: name={{ vhost_user }} createhome=no home={{ vhost_user_home }} shell={{vhost_user_shell}}
 
 - name: Add www-data to users group
   user: name=www-data append=yes groups={{ vhost_user }}
