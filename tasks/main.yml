@@ -29,6 +29,9 @@
 - name: Create vhost directory
   file: path={{ vhost_directory }} owner=root group=root mode=0755 state=directory
 
+- name: Ensure vhost_user_home exists
+  file: path={{ vhost_user_home }} state=directory
+
 - name: Create vhost user
   user: name={{ vhost_user }} createhome=no home={{ vhost_user_home }} shell={{vhost_user_shell}}
 
