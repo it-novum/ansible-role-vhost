@@ -1,15 +1,15 @@
-        ServerName {{ vhost_domain }}
+    ServerName {{ vhost_domain }}
 
-	DocumentRoot {{ vhost_directory }}/htdocs
-        <Directory {{ vhost_directory }}/htdocs>
-                Require all granted
-                Options -Indexes
-                AllowOverride all
-        </Directory>
+    DocumentRoot {{ vhost_directory }}/htdocs
+    <Directory {{ vhost_directory }}/htdocs>
+        Require all granted
+        Options -Indexes
+        AllowOverride all
+    </Directory>
 
-        LogLevel warn
-        ErrorLog {{ vhost_directory }}/logs/error.log
-        CustomLog {{ vhost_directory }}/logs/access.log combined
+    LogLevel warn
+    ErrorLog {{ vhost_directory }}/logs/error.log
+    CustomLog {{ vhost_directory }}/logs/access.log combined
 
     IncludeOptional /etc/apache2/sites-include/{{ vhost_domain }}*.conf
 
