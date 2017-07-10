@@ -11,6 +11,6 @@
 {% include "basic_conf_include.j2" %}
 
     SSLEngine on
-    SSLCertificateFile {{ vhost_ssl_certificate }}
-    SSLCertificateKeyFile {{ vhost_ssl_key }}
+    SSLCertificateFile "{{ vhost_ssl_certificate }}"
+    SSLCertificateKeyFile "{{ vhost_ssl_key }}"
 </VirtualHost>
