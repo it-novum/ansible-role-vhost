@@ -10,7 +10,7 @@
 <VirtualHost *:443>
 {% include "basic_conf_include.j2" %}
 
-	SSLEngine on
-	SSLCertificateFile /etc/ssl/certs/ssl-cert-snakeoil.pem
-	SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+    SSLEngine on
+    SSLCertificateFile {{ vhost_ssl_certificate }}
+    SSLCertificateKeyFile {{ vhost_ssl_key }}
 </VirtualHost>
