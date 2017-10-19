@@ -108,7 +108,6 @@
 - block:
   - name: PHP
     include_role: name=php
-    static: no
   when: use_php
 
 - name: Apache install mod_perl
