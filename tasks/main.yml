@@ -112,10 +112,13 @@
 
 - name: Apache install mod_perl
   apt: name=libapache2-mod-perl2
+  notify: restart apache2
   when: use_perl
 
 - name: Apache configuration
   template: src=vhost.conf.j2 dest={{ apache_sites_available }}/{{ vhost_domain }}.conf owner=root group=root mode=0644
+  notify: restart apache2
 
 - name: Enable Apache configuration
   file: state=link src={{ apache_sites_available }}/{{ vhost_domain }}.conf path={{ apache_sites_enabled }}/{{ vhost_domain }}.conf
+  notify: restart apache2
