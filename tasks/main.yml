@@ -38,6 +38,9 @@
 - name: Add www-data to users group
   user: name=www-data append=yes groups={{ vhost_user }}
 
+- name: Add user to www-data group
+  user: name={{ vhost_user }} append=yes groups=www-data
+
 - name: Check if bash_history exists
   stat:
     path: "{{ vhost_user_home }}/.bash_history"
