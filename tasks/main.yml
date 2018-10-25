@@ -18,7 +18,12 @@
   when: not vhost_user_home is defined
 
 - name: Create site-include directory
-  file: path={{ apache_sites_include }} owner=root group=root mode=0755 state=directory
+  file:
+    path: "{{ apache_sites_include }}"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+    state: "directory"
 
 - name: Ensure apache sites-available/sites-enabled exists
   file: path={{ item }} owner=root group=root mode=0755
