@@ -13,5 +13,5 @@
 
     IncludeOptional /etc/apache2/sites-include/{{ vhost_domain }}*.conf
 
-{% if use_php %}{% include "php_conf_include.j2" %}{% endif %}
+{% if use_php|bool %}{% include "php_conf_include.j2" %}{% endif %}
 

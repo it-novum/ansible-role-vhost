@@ -1,7 +1,7 @@
-use_php: false
-use_perl: false
-vhost_ssl_only: false
+use_php: no
+use_perl: no
+vhost_ssl_only: no
 vhost_ssl_certificate: "/etc/ssl/certs/ssl-cert-snakeoil.pem"
 vhost_ssl_key: "/etc/ssl/private/ssl-cert-snakeoil.key"
 vhost_user_shell: "/bin/false"
-vhost_user_bash_files: false
+vhost_user_bash_files: no

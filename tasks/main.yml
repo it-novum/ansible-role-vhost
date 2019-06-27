@@ -116,12 +116,12 @@
 - block:
   - name: PHP
     include_role: name=php
-  when: use_php
+  when: use_php|bool
 
 - name: Apache install mod_perl
   apt: name=libapache2-mod-perl2
   notify: restart apache2
-  when: use_perl
+  when: use_perl|bool
 
 - name: Apache configuration
   template: src=vhost.conf.j2 dest={{ apache_sites_available }}/{{ vhost_domain }}.conf owner=root group=root mode=0644
