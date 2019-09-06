@@ -1,21 +1,26 @@
-- name: Fact | vhost_directory
-  set_fact: vhost_directory=/var/www/{{ vhost_domain }}
+- name: Facts
+  set_fact:
+    vhost_directory: "/var/www/{{ vhost_domain }}"
+    apache_etc: "/etc/apache2"
 
-- name: Fact | apache etc
-  set_fact: apache_etc=/etc/apache2
+- name: Site facts
+  set_fact:
+    apache_sites_available: "{{ apache_etc }}/sites-available"
+    apache_sites_enabled: "{{ apache_etc }}/sites-enabled"
+    apache_sites_include: "{{ apache_etc }}/sites-include"
 
-- name: Fact | apache sites-available
-  set_fact: apache_sites_available={{ apache_etc }}/sites-available
-
-- name: Fact | apache sites-enabled
-  set_fact: apache_sites_enabled={{ apache_etc }}/sites-enabled
-
-- name: Fact | apache sites-include
-  set_fact: apache_sites_include={{ apache_etc }}/sites-include
-
-- name: Fact | vhost_user_home
-  set_fact: vhost_user_home={{ vhost_directory }}
+- name: Fact
+  set_fact:
+    vhost_user_home: "{{ vhost_directory }}"
   when: not vhost_user_home is defined
+
+- name: PHP facts
+  set_fact:
+    php_fpm_poolname: "{{ vhost_domain }}"
+    php_fpm_user: "{{ vhost_user }}"
+    php_fpm_chdir: "{{ vhost_directory }}/htdocs"
+    php_fpm_tmpdir: "{{ vhost_directory }}/tmp"
+  when: use_php|bool
 
 - name: Create site-include directory
   file:
@@ -26,25 +31,46 @@
     state: "directory"
 
 - name: Ensure apache sites-available/sites-enabled exists
-  file: path={{ item }} owner=root group=root mode=0755
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
   with_items:
     - "{{ apache_sites_enabled }}"
     - "{{ apache_sites_available }}"
 
 - name: Create vhost directory
-  file: path={{ vhost_directory }} owner=root group=root mode=0755 state=directory
+  file:
+    path: "{{ vhost_directory }}" 
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
 
 - name: Ensure vhost_user_home exists
-  file: path={{ vhost_user_home }} state=directory
+  file:
+    path: "{{ vhost_user_home }}"
+    state: directory
 
 - name: Create vhost user
-  user: name={{ vhost_user }} createhome=no home={{ vhost_user_home }} shell={{vhost_user_shell}}
+  user:
+    name: "{{ vhost_user }}"
+    createhome: no
+    home: "{{ vhost_user_home }}"
+    shell: "{{vhost_user_shell}}"
 
 - name: Add www-data to users group
-  user: name=www-data append=yes groups={{ vhost_user }}
+  user:
+    name: www-data
+    append: yes
+    groups: "{{ vhost_user }}"
 
 - name: Add user to www-data group
-  user: name={{ vhost_user }} append=yes groups=www-data
+  user:
+    name: "{{ vhost_user }}"
+    append: yes
+    groups: www-data
 
 - name: Check if bash_history exists
   stat:
@@ -104,29 +130,52 @@
   when: stat_viminfo.stat.exists
 
 - name: Create htdocs
-  file: path={{ vhost_directory }}/htdocs owner={{ vhost_user }} group={{ vhost_user }} mode=0750 state=directory
+  file:
+    path: "{{ vhost_directory }}/htdocs"
+    owner: "{{ vhost_user }}"
+    group: "{{ vhost_user }}"
+    mode: 0750
+    state: directory
 
 - name: Create log directory
-  file: path={{ vhost_directory }}/logs owner=root group={{ vhost_user }} mode=0750 state=directory
+  file:
+    path: "{{ vhost_directory }}/logs"
+    owner: root
+    group: "{{ vhost_user }}"
+    mode: 0750
+    state: directory
 
 - name: Create tmp directory
-  file: path={{ vhost_directory }}/tmp owner={{ vhost_user }} group={{ vhost_user }} mode=0700 state=directory
+  file:
+    path: "{{ vhost_directory }}/tmp"
+    owner: "{{ vhost_user }}"
+    group: "{{ vhost_user }}"
+    mode: 0700
+    state: directory
 
-# Workaround: include_role has problems with when in 2.2
-- block:
-  - name: PHP
-    include_role: name=php
+- name: PHP
+  include_role:
+    name: php
   when: use_php|bool
 
 - name: Apache install mod_perl
-  apt: name=libapache2-mod-perl2
+  apt:
+    name: libapache2-mod-perl2
   notify: restart apache2
   when: use_perl|bool
 
 - name: Apache configuration
-  template: src=vhost.conf.j2 dest={{ apache_sites_available }}/{{ vhost_domain }}.conf owner=root group=root mode=0644
+  template:
+    src: vhost.conf.j2
+    dest: "{{ apache_sites_available }}/{{ vhost_domain }}.conf"
+    owner: root
+    group: root
+    mode: 0644
   notify: restart apache2
 
 - name: Enable Apache configuration
-  file: state=link src={{ apache_sites_available }}/{{ vhost_domain }}.conf path={{ apache_sites_enabled }}/{{ vhost_domain }}.conf
+  file:
+    state: link
+    src: "{{ apache_sites_available }}/{{ vhost_domain }}.conf"
+    path: "{{ apache_sites_enabled }}/{{ vhost_domain }}.conf"
   notify: restart apache2

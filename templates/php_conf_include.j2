@@ -1,3 +1,10 @@
 	RewriteEngine on
 	ProxyTimeout 21600
-	ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:{{ php_fpm_port }}{{ vhost_directory }}/htdocs/$1
+	<Proxy "unix:{{ php_fpm_socket }}|fcgi://php-fpm-{{ vhost_user }}">
+        # we must declare a (any) parameter in here 
+        # or it won't register the proxy ahead of time
+        ProxySet disablereuse=off
+    </Proxy>
+    <FilesMatch ".+\.php$">
+        SetHandler proxy:fcgi://php-fpm-{{ vhost_user }}
+    </FilesMatch>
